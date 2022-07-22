@@ -1,60 +1,28 @@
 <template>
-    <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders">
-      <q-header elevated class="bg-yellow-14">
+    <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders bg-light-green-1">
+      <q-header elevated class="bg-light-green-9">
         <q-toolbar>
-          <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-          <q-avatar>
+          <!-- <q-btn flat @click="drawer = !drawer" round dense icon="menu" /> -->
+          <q-avatar @click="goBack">
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
           </q-avatar>
-          <q-toolbar-title>Libreta de viajes</q-toolbar-title>
+          <q-toolbar-title>{{ title }}</q-toolbar-title>
+          <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         </q-toolbar>
       </q-header>
 
       <q-drawer
         v-model="drawer"
         show-if-above
+        side="right"
         :width="200"
         :breakpoint="500"
       >
         <q-scroll-area class="fit">
           <q-list padding class="menu-list">
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="inbox" />
-              </q-item-section>
-
+            <q-item clickable v-ripple v-for="book in books" :key="book.id" @click="viewDetail(book.id)">
               <q-item-section>
-                Inbox
-              </q-item-section>
-            </q-item>
-
-            <q-item active clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="star" />
-              </q-item-section>
-
-              <q-item-section>
-                Star
-              </q-item-section>
-            </q-item>
-
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="send" />
-              </q-item-section>
-
-              <q-item-section>
-                Send
-              </q-item-section>
-            </q-item>
-
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="drafts" />
-              </q-item-section>
-
-              <q-item-section>
-                Drafts
+                {{ book.name}}
               </q-item-section>
             </q-item>
           </q-list>
@@ -69,12 +37,36 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
+import { useTravelBookStore } from '../stores/travel-book-store'
 
 export default {
   setup () {
+
+    const bookStore = useTravelBookStore()
+
+    const books = ref(bookStore.books)
+
+    const router = useRouter()
+
+    watchEffect(() => console.log(bookStore.$state, 'layout'))
+
+    const goBack = () => {
+      router.push('/')
+    }
+
+    const viewDetail = (id: number) => {
+      router.push({name: 'book-detail', params: {id}})
+    }
+
     return {
-      drawer: ref(false)
+      drawer: ref(false),
+      title: ref(bookStore.title),
+      books,
+
+      goBack,
+      viewDetail
     }
   }
 }

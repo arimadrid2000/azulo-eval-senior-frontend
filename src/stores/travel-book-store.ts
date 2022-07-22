@@ -3,11 +3,13 @@ import { defineStore } from 'pinia';
 import { Book } from '../interfaces/bookInterface';
 
 export type travelBook = {
+  title: string,
   books: Book[];
 };
 
 export const useTravelBookStore = defineStore('travelBookStore', {
   state: () => ({
+    title: 'Libreta de viajes',
     books: [],
   } as travelBook),
 

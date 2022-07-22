@@ -1,20 +1,25 @@
 <template>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn color="yellow-4" icon-right="add" label="Agregar" @click="addBook"/>
+        <q-btn color="light-green-10" icon-right="add" label="Agregar" @click="addBook"/>
     </q-page-sticky>
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useTravelBookStore } from '../stores/travel-book-store'
 
     export default {
         setup() {
             const bookStore = useTravelBookStore()
 
+            const books = ref(bookStore.books)
+
             const addBook = () => {
+                const index = books.value.length
+                console.log(index, 'el index');
                 const newBook = {
-                    id: 3,
-                    name: 'Libreta 4',
+                    id: index,
+                    name: `Libreta ${index + 1}`,
                     notes: [
                         {
                             name: 'Nota 1',

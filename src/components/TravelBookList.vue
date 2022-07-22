@@ -1,14 +1,14 @@
 <template>
     <q-list>
 
-      <q-item tag="label" v-ripple v-for="book in books" :key="book.id">
+      <q-item tag="label" v-ripple v-for="book in travelList" :key="book.id">
         <q-item-section side top>
-          <q-checkbox v-model="check1" />
+          <q-checkbox v-model="book.status" color="light-green-9"/>
         </q-item-section>
 
         <q-item-section @click="viewDetail(book.id)">
           <q-item-label>
-            <h5 class="text-h5 no-margin">
+            <h5 class="text-h5 no-margin text-light-green-9">
               {{ book.name }}
             </h5>
           </q-item-label>
@@ -71,18 +71,20 @@ import AddButton from './AddButton.vue'
               }
             })
 
-            const books = ref(bookStore.$state.books)
+            const travelList = ref(bookStore.books)
 
             watchEffect(()=> console.log(bookStore.$state))
 
-            return {
-                check1: ref(true),
-                books,
+            const viewDetail = (id: number) => {
+              router.push({name: 'book-detail', params: {id}})
+            }
 
-                viewDetail: (id: number) => {
-                    console.log(id)
-                    router.push({name: 'book-detail', params: {id}})
-                }
+            return {
+                group: ref([]),
+                Books,
+                travelList,
+
+                viewDetail
             }
         }
     }
