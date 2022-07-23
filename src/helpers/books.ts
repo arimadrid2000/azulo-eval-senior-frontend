@@ -4,19 +4,19 @@ const Books = [
         name: 'Libreta 1',
         notes: [
             {
-                name: 'Nota 1',
+                name: 'Archipiélago Los Roques',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 2',
+                name: 'Parque Nacional Canaima',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 3',
+                name: 'Isla de Margarita',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 4',
+                name: 'Parque Nacional Morrocoy',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
         ],
@@ -40,19 +40,19 @@ const Books = [
         name: 'Libreta 2',
         notes: [
             {
-                name: 'Nota 1',
+                name: 'Archipiélago Los Roques',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 2',
+                name: 'Parque Nacional Canaima',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 3',
+                name: 'Isla de Margarita',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 4',
+                name: 'Parque Nacional Morrocoy',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
         ],
@@ -76,19 +76,19 @@ const Books = [
         name: 'Libreta 3',
         notes: [
             {
-                name: 'Nota 1',
+                name: 'Archipiélago Los Roques',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 2',
+                name: 'Parque Nacional Canaima',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 3',
+                name: 'Isla de Margarita',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
             {
-                name: 'Nota 4',
+                name: 'Parque Nacional Morrocoy',
                 todoList: ['List 1', 'List 2', 'List 3']
             },
         ],
