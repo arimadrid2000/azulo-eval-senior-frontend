@@ -1,6 +1,7 @@
+import { Note } from './notesInterface'
+
 export interface Book {
     id: number,
     name: string,
-    notes: object[],
-    pictures: object[]
+    notes: Note[],
 }

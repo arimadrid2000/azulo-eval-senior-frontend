@@ -1,14 +1,35 @@
 <template>
      <q-chat-message
-        name="Jane"
-        avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-        stamp="1 minutes ago"
         size="8"
         sent
         text-color="white"
         bg-color="primary"
       >
-      <div v-for="msg in message" :key="msg" :innerHTML="msg">
+      <div v-for="msg in selectedBook.notes" :key="msg" class="cursor-pointer">
+        <q-btn-dropdown
+      color="primay"
+    >
+      <q-list>
+        <q-item clickable v-close-popup @click="editar(msg)">
+          <q-item-section>
+            <q-item-label>Editar</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup>
+          <q-item-section>
+            <q-item-label>Videos</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup>
+          <q-item-section>
+            <q-item-label>Articles</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
+    <div :innerHTML="msg.value"></div>
       </div>
      </q-chat-message>
 
@@ -53,55 +74,13 @@
 </template>
 
 <script lang="ts">
-import { ref, watchEffect } from 'vue'
-import { useQuasar } from 'quasar'
-import {useRoute} from 'vue-router'
-import { useTravelBookStore } from '../stores/travel-book-store'
-import { babelParse } from '@vue/compiler-sfc'
+import useNotes from '../composables/useNotes'
 
 
     export default {
         setup() {
-            const $q = useQuasar()
 
-            const route = useRoute()
-
-            const bookStore = useTravelBookStore()
-
-            const bookId = ref(route.params.id)
-
-            const books = ref(bookStore.books)
-
-            const message = ref(bookStore.message)
-
-            const selectedBook = ref()
-
-            const editor = ref('After you define a new button,' +' you have to make sure to put it in the toolbar too!')
-
-            
-            selectedBook.value = books.value.find((book)=> book.id === Number(bookId.value))
-            
-            bookStore.$patch((state) => {
-                state.title = `${selectedBook.value.name}`
-                state.selectedBook = selectedBook.value
-            })
-
-            const enviar = () => {
-              bookStore.$patch((state) => {
-                console.log('se disparo')
-                state.message.push(editor.value)
-                console.log(state.message)
-              })
-            }
-
-            console.log(selectedBook.value)
-
-            const openModal = (id: any) => {
-                console.log(id)
-            }
-
-            watchEffect(() => console.log(bookStore.$state, 'detail'))
-
+          const { selectedBook, message, editor, openModal, enviar, editar, saveWork, uploadIt } = useNotes()
             return {
                 selectedBook,
                 message,
@@ -109,44 +88,16 @@ import { babelParse } from '@vue/compiler-sfc'
 
                 openModal,
                 enviar,
-                saveWork () {
-                  $q.notify({
-                    message: 'Saved your text to local storage',
-                    color: 'green-4',
-                    textColor: 'white',
-                    icon: 'cloud_done'
-                  })
-                },
-                uploadIt () {
-                  console.log('upload')
-                  // const post = editor.value
-                  // // create an input file element to open file dialog
-                  // const input = document.createElement('input')
-                  // input.type = 'file'
-                  // input.accept = '.png, .jpg' // file extensions allowed
-                  // let file
-                  // input.onchange = _ => {
-                  //   const files = Array.from(input.files)
-                  //   file = files[0]
-  
-                  //   // lets load the file as dataUrl
-                  //     const reader = new FileReader()
-                  //     let dataUrl = ''
-                  //     reader.onloadend = function() {
-                  //         dataUrl = reader.result
-                        
-                  //         // append result to the body of your post
-                  //         post.body += '<div><img src="' + dataUrl + '" /></div>' 
-                  //     }
-                  //     reader.readAsDataURL(file)
-                  //   }
-                  // input.click()
-                }
+                editar,
+                saveWork,
+                uploadIt
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-
+  .cursor-pointer {
+    cursor: pointer;
+  }
 </style>

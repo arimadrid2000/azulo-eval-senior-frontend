@@ -7,11 +7,12 @@
             <img :src="settings.project_logo">
           </q-avatar>
           <q-toolbar-title>{{ settings.project_name }}</q-toolbar-title>
-          <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+          <q-btn flat @click="drawer = !drawer" round dense icon="menu" v-if="route.name !== 'home'"/>
         </q-toolbar>
       </q-header>
 
       <q-drawer
+        v-if="route.name !== 'home'"
         v-model="drawer"
         show-if-above
         side="right"
@@ -37,47 +38,19 @@
 </template>
 
 <script lang="ts">
-import { ref, watchEffect } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-import { useTravelBookStore } from '../stores/travel-book-store'
+import useBooks from '../composables/useBooks'
 
 export default {
   setup () {
 
-    const bookStore = useTravelBookStore()
-
-    const books = ref(bookStore.books)
-
-    const router = useRouter()
-
-    const settings = ref({})
-
-    watchEffect(() => console.log(bookStore.$state, 'layout'))
-
-    const goBack = () => {
-      router.push('/')
-    }
-
-    const viewDetail = (id: number) => {
-      router.push({name: 'book-detail', params: {id}})
-    }
-
-    const getSettings = async() => {
-        const { status, data } = await axios.get(`${process.env.API_URL}settings`)
-        if (status !== 200) return
-        settings.value = data.data
-
-        console.log(data.data)
-    }
-
-    getSettings()
+    const { drawer, title, books, settings, route, goBack, viewDetail} = useBooks()
 
     return {
-      drawer: ref(false),
-      title: ref(bookStore.title),
+      drawer,
+      title,
       books,
       settings,
+      route,
 
       goBack,
       viewDetail
@@ -87,6 +60,5 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.menu-list .q-item
-  border-radius: 0 32px 32px 0
+
 </style>

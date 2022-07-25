@@ -1,59 +1,20 @@
 <template>
-    <!-- <q-list>
+    <div class="full-width">
+      <div class="row q-col-gutter-md q-ma-lg">
+        <div class="col-4" v-for="book in travelList" :key="book.id">
+          <q-card @click="viewDetail(book.id)" class="bg-light-green-4 text-white">
+            <q-card-section>
+              <div class="text-h6 q-mb-xs">{{ book.name }}</div>
+            </q-card-section>
+             <q-separator />
 
-      <q-item tag="label" v-ripple v-for="book in travelList" :key="book.id">
-        <q-item-section side top>
-          <q-checkbox v-model="book.status" color="light-green-9"/>
-        </q-item-section>
+            <q-card-actions align="right">
+              <q-btn flat @click="viewDetail(book.id)">Ver</q-btn>
+              <!-- <q-btn flat>Action 2</q-btn> -->
+            </q-card-actions>
 
-        <q-item-section @click="viewDetail(book.id)">
-          <q-item-label>
-            <h5 class="text-h5 no-margin text-light-green-9">
-              {{ book.name }}
-            </h5>
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-       <q-item tag="label" v-ripple>
-        <q-item-section side top>
-          <q-checkbox v-model="check2" />
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label>Sound</q-item-label>
-          <q-item-label caption>
-            Auto-update apps at anytime. Data charges may apply
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item tag="label" v-ripple>
-        <q-item-section side top>
-          <q-checkbox v-model="check3" />
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label>Auto-add widgets</q-item-label>
-          <q-item-label caption>
-            Automatically add home screen widgets
-          </q-item-label>
-        </q-item-section>
-      </q-item> -->
-    <!-- </q-list> -->
-
-    <div class="row q-col-gutter-md q-ma-lg">
-      <div class="col-4" v-for="book in travelList" :key="book.id">
-        <q-card @click="viewDetail(book.id)">
-          <q-card-section>
-            <div class="text-h6 q-mb-xs">{{ book.name }}</div>
-            <div class="row no-wrap items-center">
-              <span class="text-caption text-grey q-ml-sm">{{ book.notes.length}} notas</span>
-            </div>
-          </q-card-section>
-
-          <img :src="book.pictures[0].src">
-        </q-card>
+          </q-card>
+        </div>
       </div>
     </div>
 

@@ -4,7 +4,7 @@ import { Book } from '../interfaces/bookInterface';
 
 export type travelBook = {
   title: string,
-  selectedBook: Object,
+  selectedBook: any,
   message: String[],
   books: Book[];
 };
