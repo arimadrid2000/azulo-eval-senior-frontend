@@ -9,9 +9,13 @@ const routes: RouteRecordRaw[] = [
         name: 'home',
         component: () => import('pages/BookPage.vue') 
       },
+      // { path: '/:id', 
+      //   name: 'book-detail',
+      //   component: () => import('pages/TravelBookDetail.vue')
+      // },
       { path: '/:id', 
         name: 'book-detail',
-        component: () => import('pages/TravelBookDetail.vue')
+        component: () => import('components/FormBook.vue')
       }
     ],
   },

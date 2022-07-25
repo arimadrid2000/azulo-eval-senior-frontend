@@ -4,12 +4,16 @@ import { Book } from '../interfaces/bookInterface';
 
 export type travelBook = {
   title: string,
+  selectedBook: Object,
+  message: String[],
   books: Book[];
 };
 
 export const useTravelBookStore = defineStore('travelBookStore', {
   state: () => ({
     title: 'Libreta de viajes',
+    selectedBook: {},
+    message: [],
     books: [],
   } as travelBook),
 

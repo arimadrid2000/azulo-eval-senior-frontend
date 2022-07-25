@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import { ref } from 'vue'
+import axios from 'axios'
 import SearchBook from 'components/SearchBook.vue'
 import TravelBookList from 'components/TravelBookList.vue'
 
@@ -31,7 +32,7 @@ import TravelBookList from 'components/TravelBookList.vue'
             return {
                 showSearch,
 
-                changeStatus: () => showSearch.value = !showSearch.value
+                changeStatus: () => showSearch.value = !showSearch.value,
             }
         }
     }

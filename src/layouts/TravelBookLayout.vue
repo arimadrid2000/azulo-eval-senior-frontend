@@ -4,9 +4,9 @@
         <q-toolbar>
           <!-- <q-btn flat @click="drawer = !drawer" round dense icon="menu" /> -->
           <q-avatar @click="goBack">
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+            <img :src="settings.project_logo">
           </q-avatar>
-          <q-toolbar-title>{{ title }}</q-toolbar-title>
+          <q-toolbar-title>{{ settings.project_name }}</q-toolbar-title>
           <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         </q-toolbar>
       </q-header>
@@ -38,6 +38,7 @@
 
 <script lang="ts">
 import { ref, watchEffect } from 'vue'
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useTravelBookStore } from '../stores/travel-book-store'
 
@@ -50,6 +51,8 @@ export default {
 
     const router = useRouter()
 
+    const settings = ref({})
+
     watchEffect(() => console.log(bookStore.$state, 'layout'))
 
     const goBack = () => {
@@ -60,10 +63,21 @@ export default {
       router.push({name: 'book-detail', params: {id}})
     }
 
+    const getSettings = async() => {
+        const { status, data } = await axios.get(`${process.env.API_URL}settings`)
+        if (status !== 200) return
+        settings.value = data.data
+
+        console.log(data.data)
+    }
+
+    getSettings()
+
     return {
       drawer: ref(false),
       title: ref(bookStore.title),
       books,
+      settings,
 
       goBack,
       viewDetail
