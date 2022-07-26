@@ -32,17 +32,16 @@ const useNotes = () => {
 
     const enviar = () => {
       bookStore.$patch((state) => {
-        console.log('se disparo')
         const lastIndex = selectedBook.value.notes.length
-        const lastItem = selectedBook.value.notes[lastIndex - 1]
+        const id = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].id + 1 : 0
+        const position = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].position + 1 : 0
         const newNote = {
-          id: lastItem.id + 1,
-          position: lastItem.position + 1,
+          id: id,
+          position: position,
           value: editor.value,
           bookId: selectedBook.value.id
         }
         state.selectedBook.notes.push(newNote)
-        console.log(state.selectedBook.notes)
       })
     }
 

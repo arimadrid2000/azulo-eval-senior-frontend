@@ -32,45 +32,46 @@
     <div :innerHTML="msg.value"></div>
       </div>
      </q-chat-message>
-
-    <div class="q-pa-md q-gutter-sm">
-      <div class="col-2">
-
+     <q-footer elevated class="bg-white text-primary">
+        <div class="q-pa-md q-gutter-sm">
+          <q-editor
+            v-model="editor"
+            @paste="evt => pasteCapture(evt)"
+            @drop="evt => dropCapture(evt)"
+            :definitions="{
+              save: {
+                tip: 'Save your work',
+                icon: 'save',
+                label: 'Save',
+                handler: saveWork
+              },
+              upload: {
+                tip: 'Upload to cloud',
+                icon: 'cloud_upload',
+                label: 'Upload',
+                handler: uploadIt
+              }
+            }"
+            :toolbar="[
+              ['bold', 'italic', 'strike', 'underline'],
+              ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+              ['upload']
+            ]"
+          >
+          <!-- <template v-slot:image>
+              <q-uploader
+              style="max-width: 300px"
+              url="http://localhost:4444/upload"
+              label="Restricted to images"
+              multiple
+              accept=".jpg, image/*"
+            />
+          </template> -->
+          </q-editor>
+          <q-btn color="primary" label="Guardar" @click="enviar"/>
       </div>
-      <q-editor
-        v-model="editor"
-        :definitions="{
-          save: {
-            tip: 'Save your work',
-            icon: 'save',
-            label: 'Save',
-            handler: saveWork
-          },
-          upload: {
-            tip: 'Upload to cloud',
-            icon: 'cloud_upload',
-            label: 'Upload',
-            handler: uploadIt
-          }
-        }"
-        :toolbar="[
-          ['bold', 'italic', 'strike', 'underline'],
-          ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
-          ['upload']
-        ]"
-      >
-      <!-- <template v-slot:image>
-          <q-uploader
-          style="max-width: 300px"
-          url="http://localhost:4444/upload"
-          label="Restricted to images"
-          multiple
-          accept=".jpg, image/*"
-        />
-      </template> -->
-      </q-editor>
-      <q-btn color="primary" label="Guardar" @click="enviar"/>
-  </div>
+      </q-footer>
+
 </template>
 
 <script lang="ts">

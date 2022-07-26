@@ -1,7 +1,7 @@
 <template>
     <div class="full-width">
       <div class="row q-col-gutter-md q-ma-lg">
-        <div class="col-4" v-for="book in travelList" :key="book.id">
+        <div :class="cardSize" v-for="book in travelList" :key="book.id">
           <q-card @click="viewDetail(book.id)" class="bg-light-green-4 text-white">
             <q-card-section>
               <div class="text-h6 q-mb-xs">{{ book.name }}</div>
@@ -23,8 +23,9 @@
 </template>
 
 <script lang="ts">
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useTravelBookStore } from '../stores/travel-book-store'
 import Books from '../helpers/books'
 import AddButton from './AddButton.vue'
@@ -37,6 +38,12 @@ import AddButton from './AddButton.vue'
             const router = useRouter()
 
             const bookStore = useTravelBookStore()
+
+            const $q = useQuasar()
+
+            const cardSize = computed(() => {
+              return $q.screen.lt.sm ? 'col-12' : 'col-4'
+            })
 
 
             bookStore.$patch((state) => {
@@ -60,6 +67,7 @@ import AddButton from './AddButton.vue'
                 group: ref([]),
                 Books,
                 travelList,
+                cardSize,
 
                 viewDetail
             }
