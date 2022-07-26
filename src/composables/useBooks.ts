@@ -1,51 +1,83 @@
-import { ref, watchEffect } from 'vue'
-import axios from 'axios'
+import { ref, watchEffect, computed } from 'vue'
+import { api } from '../boot/axios'
 import { useRouter, useRoute } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useTravelBookStore } from '../stores/travel-book-store'
+import { useSettingsStore } from '../stores/settings'
+import  Books from '../helpers/books'
 
 const useBooks = () => {
-    const bookStore = useTravelBookStore()
+  const $q = useQuasar()
 
-    const books = ref(bookStore.books)
+  const router = useRouter()
 
-    const router = useRouter()
+  const route = useRoute()
 
-    const route = useRoute()
+  const bookStore = useTravelBookStore()
 
-    console.log(route.name)
+  const settingsStore = useSettingsStore()
 
-    const settings = ref({})
+  const books = ref(bookStore.books)
 
-    watchEffect(() => console.log(bookStore.$state, 'layout'))
+  const travelList = computed(() => {
+    return bookStore.books
+  })
 
-    const goBack = () => {
-      router.push('/')
+  const title = computed(()=>{
+    return settingsStore.title
+  })
+
+  const logo = computed(() => {
+    return settingsStore.logo
+  })
+
+  const cardSize = computed(() => {
+    return $q.screen.lt.sm ? 'col-12' : 'col-4'
+  })
+  
+  const goBack = () => {
+    router.push('/')
+  }
+
+  const viewDetail = (id: number) => {
+    router.push({name: 'book-detail', params: {id}})
+  }
+
+  const getSettings = async() => {
+
+      const { status, data } = await api.get('items/branding')
+  
+      if (status !== 200) return
+      settingsStore.setSettings(data.data[0])
     }
 
-    const viewDetail = (id: number) => {
-      router.push({name: 'book-detail', params: {id}})
-    }
+    
+  getSettings()
+    
+  bookStore.$patch((state) => {
+      api.get('items/books').then(response => {
+        const { data } = response.data;
+        state.books = data;
+      }).catch(error=> {
+        console.log(error)
+      })
+      localStorage.setItem('booksList', JSON.stringify(state.books))
+  })
 
-    const getSettings = async() => {
-        const { status, data } = await axios.get(`${process.env.API_URL}settings`)
-        if (status !== 200) return
-        settings.value = data.data
+  watchEffect(() => console.log(bookStore.$state, settingsStore.$state, 'layout'))
 
-        console.log(data.data)
-    }
+  return {
+    drawer: ref(false),
+    books,
+    title,
+    logo,
+    route,
+    cardSize,
+    travelList,
 
-    getSettings()
-
-    return {
-      drawer: ref(false),
-      title: ref(bookStore.title),
-      books,
-      settings,
-      route,
-
-      goBack,
-      viewDetail
-    }
+    goBack,
+    viewDetail
+  }
 }
 
 export default useBooks

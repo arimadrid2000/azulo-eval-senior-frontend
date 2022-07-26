@@ -4,9 +4,9 @@
         <q-toolbar>
           <!-- <q-btn flat @click="drawer = !drawer" round dense icon="menu" /> -->
           <q-avatar @click="goBack">
-            <img :src="settings.project_logo">
+            <img :src="logo">
           </q-avatar>
-          <q-toolbar-title>{{ settings.project_name }}</q-toolbar-title>
+          <q-toolbar-title>{{ title }}</q-toolbar-title>
           <q-btn flat @click="drawer = !drawer" round dense icon="menu" v-if="route.name !== 'home'"/>
         </q-toolbar>
       </q-header>
@@ -43,14 +43,14 @@ import useBooks from '../composables/useBooks'
 export default {
   setup () {
 
-    const { drawer, title, books, settings, route, goBack, viewDetail} = useBooks()
+    const { drawer, books, title, route, logo, goBack, viewDetail} = useBooks()
 
     return {
       drawer,
-      title,
       books,
-      settings,
+      title,
       route,
+      logo,
 
       goBack,
       viewDetail

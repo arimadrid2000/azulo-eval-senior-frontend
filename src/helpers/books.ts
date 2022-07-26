@@ -1,6 +1,5 @@
 const Books = [
     {
-        id: 0,
         name: 'Archipiélago Los Roques',
         notes: [
             {
@@ -24,7 +23,6 @@ const Books = [
         ],
     },
     {
-        id: 1,
         name: 'Parque Nacional Canaima',
         notes: [
             {
@@ -48,7 +46,6 @@ const Books = [
         ],
     },
     {
-        id: 2,
         name: 'Parque Nacional Morrocoy',
         notes: [
             {

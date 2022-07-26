@@ -26,7 +26,6 @@ const useNotes = () => {
     console.log(selectedBook.value)
     
     bookStore.$patch((state) => {
-        state.title = `${selectedBook.value.name}`
         state.selectedBook = selectedBook.value
     })
 

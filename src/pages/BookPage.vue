@@ -17,7 +17,6 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import axios from 'axios'
 import SearchBook from 'components/SearchBook.vue'
 import TravelBookList from 'components/TravelBookList.vue'
 

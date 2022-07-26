@@ -23,11 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
-import { useTravelBookStore } from '../stores/travel-book-store'
-import Books from '../helpers/books'
+import useBooks from '../composables/useBooks'
 import AddButton from './AddButton.vue'
 
     export default {
@@ -35,37 +31,10 @@ import AddButton from './AddButton.vue'
         AddButton
       },
         setup() {
-            const router = useRouter()
-
-            const bookStore = useTravelBookStore()
-
-            const $q = useQuasar()
-
-            const cardSize = computed(() => {
-              return $q.screen.lt.sm ? 'col-12' : 'col-4'
-            })
-
-
-            bookStore.$patch((state) => {
-              if (state.books.length === 0) {
-                Books.forEach((book) => {
-                  state.books.push(book)
-                })
-                localStorage.setItem('booksList', JSON.stringify(state.books))
-              }
-            })
-
-            const travelList = ref(bookStore.books)
-
-            watchEffect(()=> console.log(bookStore.$state))
-
-            const viewDetail = (id: number) => {
-              router.push({name: 'book-detail', params: {id}})
-            }
+            
+            const { travelList, cardSize, viewDetail } = useBooks()
 
             return {
-                group: ref([]),
-                Books,
                 travelList,
                 cardSize,
 

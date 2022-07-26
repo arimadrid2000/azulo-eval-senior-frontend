@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 
+import { api } from '../boot/axios'
+
 import { Book } from '../interfaces/bookInterface';
 
 export type travelBook = {
-  title: string,
   selectedBook: any,
   message: String[],
   books: Book[];
@@ -11,7 +12,6 @@ export type travelBook = {
 
 export const useTravelBookStore = defineStore('travelBookStore', {
   state: () => ({
-    title: 'Libreta de viajes',
     selectedBook: {},
     message: [],
     books: [],
@@ -27,9 +27,25 @@ export const useTravelBookStore = defineStore('travelBookStore', {
       return this.books.findIndex((book) => book.id === id);
     },
 
+    getBooks() {
+      api.get('items/books')
+      .then(response => {
+        const { data } = response.data;
+        this.books = data;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    },
+
     createNewBook(book: Book) {
       if (!book) return;
-      this.books.push(book);
+      api.post('items/books', book).then(response => {
+        console.log(response);
+        this.getBooks();
+      }).catch(error => {
+        console.log(error);
+      })
     },
 
     updateBook(id: number, data: Book) {

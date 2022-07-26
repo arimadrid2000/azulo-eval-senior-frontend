@@ -2,54 +2,58 @@
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn color="light-green-10" icon-right="add" label="Agregar" @click="prompt = true"/>
     </q-page-sticky>
-    <q-dialog v-model="prompt" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Your address</div>
-        </q-card-section>
+    <q-drawer
+        side="right"
+        v-model="prompt"
+        show-if-above
+        bordered
+        :breakpoint="500"
+        class="bg-grey-3"
+      >
+        <q-card style="min-width: 350px">
+            <q-card-section>
+            <div class="text-h6">Ingrese su destino</div>
+            </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="address" autofocus @keyup.enter="prompt = false" ref="streetRef" />
-        </q-card-section>
+            <q-card-section class="q-pt-none">
+            <input autofocus class="address-input" @keyup.enter="prompt = false" v-model="address" @focus="searchFunction" ref="streetRef" />
+            </q-card-section>
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Guardar" @click="addBook" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            <q-card-actions align="right" class="text-primary">
+            <q-btn flat label="Cancel" v-close-popup @click="prompt = false" />
+            <q-btn flat label="Guardar" @click="addBook" v-close-popup />
+            </q-card-actions>
+        </q-card>
+      </q-drawer>
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { useTravelBookStore } from '../stores/travel-book-store'
 
     export default {
         setup() {
             const streetRef = ref(null)
 
-            const src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDsTARwYX8h8G9Bq4NEh1Rh1MQZYp2SoS8&libraries=places"
+            const src = process.env.MAP_URL
 
             const bookStore = useTravelBookStore()
-
-            const books = ref(bookStore.books)
 
             const prompt = ref(false)
 
             const address = ref('')
 
             const addBook = () => {
-                const index = books.value.length
-                console.log(index, 'el index');
+                console.log(streetRef.value, address.value)
                 const newBook = {
-                    id: index,
                     name: `${address.value}`,
                     notes: []
                 }
                 bookStore.createNewBook(newBook)
+                prompt.value = false
             }
 
-            onMounted(() => {
+            const searchFunction = () => {
                 new Promise((resolve, reject) => {
                     let script = document.querySelector(`script[src="${src}"]`)
 
@@ -87,12 +91,16 @@ import { useTravelBookStore } from '../stores/travel-book-store'
                     })
 
                 }).then(()=>{
-                    new google.maps.places.Autocomplete(streetRef.value)
+                    const place = new google.maps.places.Autocomplete(streetRef.value)
+                    place.addEventListener("place_changed", () => {
+                        address.value = place.getPlace()
+                    })
                 })
-            })
+            }
 
             return {
                 addBook,
+                searchFunction,
                 prompt,
                 address,
                 streetRef
@@ -102,5 +110,14 @@ import { useTravelBookStore } from '../stores/travel-book-store'
 </script>
 
 <style lang="scss" scoped>
-
+    .address-input {
+        width: 100%;
+        height: 40px;
+        padding: 5px;
+        border-radius: 8px;
+        border: 2px solid  $secondary;
+        &:focus {
+            border-color: 2px solid $positive;
+        }
+    }
 </style>
