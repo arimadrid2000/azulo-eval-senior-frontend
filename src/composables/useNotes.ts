@@ -1,4 +1,5 @@
 import { ref, watchEffect } from 'vue'
+import { api } from '../boot/axios'
 import { useQuasar } from 'quasar'
 import {useRoute} from 'vue-router'
 import { useTravelBookStore } from '../stores/travel-book-store'
@@ -41,6 +42,11 @@ const useNotes = () => {
           bookId: selectedBook.value.id
         }
         state.selectedBook.notes.push(newNote)
+        api.patch(`items/books/${selectedBook.value.id}`, {notes: state.selectedBook.notes}).then(response => {
+          console.log(response)
+        }).catch(error => {
+          console.log(error)
+        })
       })
     }
 

@@ -2,16 +2,15 @@
     <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders bg-light-green-1">
       <q-header elevated class="bg-light-green-9">
         <q-toolbar>
-          <!-- <q-btn flat @click="drawer = !drawer" round dense icon="menu" /> -->
           <q-avatar @click="goBack">
             <img :src="logo">
           </q-avatar>
           <q-toolbar-title>{{ title }}</q-toolbar-title>
-          <q-btn flat @click="drawer = !drawer" round dense icon="menu" v-if="route.name !== 'home'"/>
+          <!-- <q-btn flat @click="drawer = !drawer" round dense icon="menu" v-if="route.name !== 'home'"/> -->
         </q-toolbar>
       </q-header>
 
-      <q-drawer
+      <!-- <q-drawer
         v-if="route.name !== 'home'"
         v-model="drawer"
         show-if-above
@@ -28,7 +27,7 @@
             </q-item>
           </q-list>
         </q-scroll-area>
-      </q-drawer>
+      </q-drawer> -->
 
       <q-page-container>
         <router-view>

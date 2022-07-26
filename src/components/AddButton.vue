@@ -8,22 +8,12 @@
         show-if-above
         bordered
         :breakpoint="500"
-        class="bg-grey-3"
+        class="bg-grey-3 q-pa-lg"
       >
-        <q-card style="min-width: 350px">
-            <q-card-section>
             <div class="text-h6">Ingrese su destino</div>
-            </q-card-section>
-
-            <q-card-section class="q-pt-none">
             <input autofocus class="address-input" @keyup.enter="prompt = false" v-model="address" @focus="searchFunction" ref="streetRef" />
-            </q-card-section>
-
-            <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancel" v-close-popup @click="prompt = false" />
+            <q-btn flat label="Cancelar" v-close-popup @click="prompt = false" />
             <q-btn flat label="Guardar" @click="addBook" v-close-popup />
-            </q-card-actions>
-        </q-card>
       </q-drawer>
 </template>
 
