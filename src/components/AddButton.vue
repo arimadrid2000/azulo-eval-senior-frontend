@@ -1,6 +1,6 @@
 <template>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn color="light-green-10" icon-right="add" label="Agregar" @click="prompt = true"/>
+        <q-btn color="cyan-9" glossy icon-right="add" label="Agregar" @click="prompt = true"/>
     </q-page-sticky>
     <q-drawer
         side="right"
@@ -8,85 +8,24 @@
         show-if-above
         bordered
         :breakpoint="500"
-        class="bg-grey-3 q-pa-lg"
+        class="bg-grey-1 q-pa-lg"
       >
-            <div class="text-h6">Ingrese su destino</div>
-            <input autofocus class="address-input" @keyup.enter="prompt = false" v-model="address" @focus="searchFunction" ref="streetRef" />
-            <q-btn flat label="Cancelar" v-close-popup @click="prompt = false" />
-            <q-btn flat label="Guardar" @click="addBook" v-close-popup />
-      </q-drawer>
+        <div class="text-h6">Ingrese su destino</div>
+        <input autofocus class="address-input" @keyup.enter="prompt = false" v-model="address" @focus="searchFunction" ref="streetRef" />
+        <q-btn-group spread class="q-mt-lg">
+            <q-btn dense size="md" glossy color="cyan-10" rounded label="Guardar" @click="addBook"/>
+            <q-btn dense size="md" glossy color="cyan-10" rounded label="Cancelar" @click="prompt = false"/>
+        </q-btn-group>
+    </q-drawer>
 </template>
 
 <script>
-import { ref, onUnmounted } from 'vue'
-import { useTravelBookStore } from '../stores/travel-book-store'
+import usePlaces from '../composables/usePlaces'
 
     export default {
         setup() {
-            const streetRef = ref(null)
-
-            const src = process.env.MAP_URL
-
-            const bookStore = useTravelBookStore()
-
-            const prompt = ref(false)
-
-            const address = ref('')
-
-            const addBook = () => {
-                console.log(streetRef.value, address.value)
-                const newBook = {
-                    name: `${address.value}`,
-                    notes: []
-                }
-                bookStore.createNewBook(newBook)
-                prompt.value = false
-            }
-
-            const searchFunction = () => {
-                new Promise((resolve, reject) => {
-                    let script = document.querySelector(`script[src="${src}"]`)
-
-                    if(!script) {
-                        script = document.createElement("script")
-                        script.src = src
-                        script.async = true
-                        script.setAttribute("data-status", "loading")
-                        document.head.append(script)
-                    }
-
-                    if (script.getAttribute("data-status") === "loaded") {
-                        resolve();
-                    }
-
-                    function onScriptLoad() {
-                        resolve()
-                        script.setAttribute("data-status", "loaded")
-                    }
-
-                    function onScriptError() {
-                        reject()
-                        script.setAttribute("data-status", "error")
-                    }
-
-                    script.addEventListener("load", onScriptLoad)
-                    script.addEventListener("error", onScriptError)
-
-                    onUnmounted(() => {
-                        if(document.head.contains(script)) {
-                            script.removeEventListener("load", onScriptLoad)
-                            script.removeEventListener("error", onScriptError)
-                            document.head.removeChild(script)
-                        }
-                    })
-
-                }).then(()=>{
-                    const place = new google.maps.places.Autocomplete(streetRef.value)
-                    place.addEventListener("place_changed", () => {
-                        address.value = place.getPlace()
-                    })
-                })
-            }
+           
+           const { addBook, searchFunction, prompt, address, streetRef } = usePlaces()
 
             return {
                 addBook,
@@ -104,10 +43,10 @@ import { useTravelBookStore } from '../stores/travel-book-store'
         width: 100%;
         height: 40px;
         padding: 5px;
-        border-radius: 8px;
-        border: 2px solid  $secondary;
-        &:focus {
-            border-color: 2px solid $positive;
+        border-radius: 4px;
+        border: 2px solid  $cyan-9;
+        &:focus-visible {
+            outline: $cyan-4 auto 2px;
         }
     }
 </style>

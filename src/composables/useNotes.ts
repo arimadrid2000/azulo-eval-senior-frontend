@@ -1,9 +1,10 @@
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 import { api } from '../boot/axios'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import {useRoute} from 'vue-router'
 import { useTravelBookStore } from '../stores/travel-book-store'
+import { useSettingsStore } from '../stores/settings'
 
 const useNotes = () => {
     const $q = useQuasar()
@@ -12,30 +13,29 @@ const useNotes = () => {
 
     const bookStore = useTravelBookStore()
 
+    const settingsStore = useSettingsStore()
+
     const bookId = ref(route.params.id)
 
     const books = ref(bookStore.books)
 
     const message = ref(bookStore.message)
 
-    const selectedBook = ref()
-
     const editor = ref('')
-
     
-    selectedBook.value = books.value.find((book)=> book.id === Number(bookId.value))
-
-    console.log(selectedBook.value)
-    
-    bookStore.$patch((state) => {
-        state.selectedBook = selectedBook.value
+    const selectedBook = computed(() => {
+      bookStore.$patch((state) => {
+          state.selectedBook = books.value.find((book)=> book.id === Number(bookId.value))
+      })
+      settingsStore.title = bookStore.selectedBook.name
+      return bookStore.selectedBook
     })
 
     const enviar = () => {
       bookStore.$patch((state) => {
-        const lastIndex = selectedBook.value.notes.length
-        const id = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].id + 1 : 0
-        const position = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].position + 1 : 0
+        const lastIndex = state.selectedBook.notes.length
+        const id = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].id + 1 : 0
+        const position = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].position + 1 : 0
         const newNote = {
           id: id,
           position: position,
@@ -43,7 +43,7 @@ const useNotes = () => {
           type: 'text'
         }
         state.selectedBook.notes.push(newNote)
-        api.patch(`items/books/${selectedBook.value.id}`, {notes: state.selectedBook.notes}).then(response => {
+        api.patch(`items/books/${state.selectedBook.id}`, {notes: state.selectedBook.notes}).then(response => {
           console.log(response)
         }).catch(error => {
           console.log(error)
@@ -67,9 +67,9 @@ const useNotes = () => {
       const response = JSON.parse(xhr.response);
       const { data } = response;
       bookStore.$patch((state) => {
-        const lastIndex = selectedBook.value.notes.length
-        const id = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].id + 1 : 0
-        const position = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].position + 1 : 0
+        const lastIndex = state.selectedBook.notes.length
+        const id = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].id + 1 : 0
+        const position = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].position + 1 : 0
         const newNote = {
           id: id,
           position: position,
@@ -77,7 +77,7 @@ const useNotes = () => {
           type: 'image'
         }
         state.selectedBook.notes.push(newNote)
-        api.patch(`items/books/${selectedBook.value.id}`, {notes: state.selectedBook.notes}).then(response => {
+        api.patch(`items/books/${state.selectedBook.id}`, {notes: state.selectedBook.notes}).then(response => {
           console.log(response)
         }).catch(error => {
           console.log(error)

@@ -1,25 +1,30 @@
 <template>
-    <div class="full-width">
-      <div class="row q-col-gutter-md q-ma-lg">
-        <div :class="cardSize" v-for="book in travelList" :key="book.id">
-          <q-card @click="viewDetail(book.id)" class="bg-light-green-4 text-white">
-            <q-card-section>
-              <div class="text-h6 q-mb-xs">{{ book.name }}</div>
-            </q-card-section>
-             <q-separator />
+<div class="q-pa-md full-width">
+    <q-toolbar class="bg-cyan-10 text-white shadow-2">
+      <q-toolbar-title>Listado de libretas</q-toolbar-title>
+    </q-toolbar>
 
-            <q-card-actions align="right">
-              <q-btn flat @click="viewDetail(book.id)">Ver</q-btn>
-              <q-btn flat @click="deleteBook(book.id)">Borrar</q-btn>
-            </q-card-actions>
+    <q-list bordered separator class="bg-white">
+      <q-item v-for="book in travelList" :key="book.id" class="q-my-sm" v-ripple>
+        <q-item-section avatar>
+          <q-avatar icon="place" color="cyan-8" text-color="white" />
+        </q-item-section>
 
-          </q-card>
-        </div>
-      </div>
-    </div>
+        <q-item-section>
+          <q-item-label>{{ book.name }}</q-item-label>
+        </q-item-section>
 
-
-    <AddButton />
+        <q-item-section side>
+          <q-btn-group>
+            <q-btn color="cyan" rounded glossy icon-right="book" label="Ver notas" @click="viewDetail(book.id)"/>
+            <q-btn color="cyan" rounded glossy icon-right="delete_outline" label="Borrar" @click="deleteBook(book.id)"/>
+          </q-btn-group>
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </div>
+    
+  <AddButton />
 </template>
 
 <script lang="ts">

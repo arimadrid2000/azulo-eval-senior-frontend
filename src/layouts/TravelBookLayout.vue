@@ -1,6 +1,6 @@
 <template>
-    <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders bg-light-green-1">
-      <q-header elevated class="bg-light-green-9">
+    <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders bg-grey-1">
+      <q-header elevated class="bg-cyan-7">
         <q-toolbar>
           <q-avatar @click="goBack">
             <img :src="logo">

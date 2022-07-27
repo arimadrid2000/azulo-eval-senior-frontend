@@ -34,7 +34,8 @@
      <q-img
         v-if="msg.type === 'image'"
           :src="msg.value"
-          :ratio="16/9"
+          height="140px"
+          width="140px"
         />
       </div>
      </q-chat-message>
