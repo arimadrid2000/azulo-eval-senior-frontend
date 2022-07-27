@@ -10,7 +10,7 @@
 
             <q-card-actions align="right">
               <q-btn flat @click="viewDetail(book.id)">Ver</q-btn>
-              <!-- <q-btn flat>Action 2</q-btn> -->
+              <q-btn flat @click="deleteBook(book.id)">Borrar</q-btn>
             </q-card-actions>
 
           </q-card>
@@ -32,13 +32,14 @@ import AddButton from './AddButton.vue'
       },
         setup() {
             
-            const { travelList, cardSize, viewDetail } = useBooks()
+            const { travelList, cardSize, viewDetail, deleteBook } = useBooks()
 
             return {
                 travelList,
                 cardSize,
 
-                viewDetail
+                viewDetail,
+                deleteBook
             }
         }
     }

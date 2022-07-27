@@ -4,7 +4,6 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useTravelBookStore } from '../stores/travel-book-store'
 import { useSettingsStore } from '../stores/settings'
-import  Books from '../helpers/books'
 
 const useBooks = () => {
   const $q = useQuasar()
@@ -43,6 +42,10 @@ const useBooks = () => {
     router.push({name: 'book-detail', params: {id}})
   }
 
+  const deleteBook = (id: number) => {
+    bookStore.deleteBook(id)
+  }
+
   const getSettings = async() => {
 
       const { status, data } = await api.get('items/branding')
@@ -76,7 +79,8 @@ const useBooks = () => {
     travelList,
 
     goBack,
-    viewDetail
+    viewDetail,
+    deleteBook
   }
 }
 

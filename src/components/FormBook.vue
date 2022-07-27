@@ -30,7 +30,12 @@
         </q-item>
       </q-list>
     </q-btn-dropdown> -->
-    <div :innerHTML="msg.value"></div>
+    <div v-if="msg.type === 'text'" :innerHTML="msg.value"></div>
+     <q-img
+        v-if="msg.type === 'image'"
+          :src="msg.value"
+          :ratio="16/9"
+        />
       </div>
      </q-chat-message>
      <q-footer elevated class="bg-white text-light-green-10 q-pa-md">
@@ -71,12 +76,13 @@
           </div>
           <div class="col-3">
             <q-uploader
-              url="http://localhost:4444/upload"
+              :factory="factoryFn"
               label="Solo imagenes"
               class="full-width"
               color="light-green-4"
               multiple
               accept=".jpg, image/*"
+              @uploaded="successUpload"
               @rejected="onRejected"
             />
           </div>
@@ -92,15 +98,17 @@ import useNotes from '../composables/useNotes'
     export default {
         setup() {
 
-          const { selectedBook, message, editor, openModal, enviar, editar, saveWork, uploadIt } = useNotes()
+          const { selectedBook, message, editor, openModal, enviar, editar, factoryFn, successUpload, saveWork, uploadIt } = useNotes()
             return {
                 selectedBook,
                 message,
                 editor,
 
                 openModal,
+                successUpload,
                 enviar,
                 editar,
+                factoryFn,
                 saveWork,
                 uploadIt
             }

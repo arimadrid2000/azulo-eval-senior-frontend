@@ -1,5 +1,6 @@
 import { ref, watchEffect } from 'vue'
 import { api } from '../boot/axios'
+import axios from 'axios'
 import { useQuasar } from 'quasar'
 import {useRoute} from 'vue-router'
 import { useTravelBookStore } from '../stores/travel-book-store'
@@ -39,7 +40,7 @@ const useNotes = () => {
           id: id,
           position: position,
           value: editor.value,
-          bookId: selectedBook.value.id
+          type: 'text'
         }
         state.selectedBook.notes.push(newNote)
         api.patch(`items/books/${selectedBook.value.id}`, {notes: state.selectedBook.notes}).then(response => {
@@ -60,6 +61,42 @@ const useNotes = () => {
         console.log(id)
     }
 
+
+    const successUpload = (info: any) => {
+      const { xhr } = info;
+      const response = JSON.parse(xhr.response);
+      const { data } = response;
+      bookStore.$patch((state) => {
+        const lastIndex = selectedBook.value.notes.length
+        const id = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].id + 1 : 0
+        const position = lastIndex > 0 ? selectedBook.value.notes[lastIndex - 1].position + 1 : 0
+        const newNote = {
+          id: id,
+          position: position,
+          value: `${process.env.API_URL}assets/${data.id}`,
+          type: 'image'
+        }
+        state.selectedBook.notes.push(newNote)
+        api.patch(`items/books/${selectedBook.value.id}`, {notes: state.selectedBook.notes}).then(response => {
+          console.log(response)
+        }).catch(error => {
+          console.log(error)
+        })
+      })
+      console.log(JSON.parse(xhr.response));
+    }
+
+    const factoryFn = (files: any) => {
+      return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({
+              url: `${process.env.API_URL}files`
+            })
+          }, 2000)
+      })
+
+    }
+
     watchEffect(() => console.log(bookStore.$state, 'detail'))
 
     return {
@@ -70,6 +107,8 @@ const useNotes = () => {
         openModal,
         enviar,
         editar,
+        factoryFn,
+        successUpload,
         saveWork () {
           $q.notify({
             message: 'Saved your text to local storage',

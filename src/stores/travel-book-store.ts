@@ -59,11 +59,18 @@ export const useTravelBookStore = defineStore('travelBookStore', {
 
     deleteBook(id: number) {
       
-      const index = this.findBookById(id);
+      // const index = this.findBookById(id);
       
-      if(index === -1) return ;
+      // if(index === -1) return ;
 
-      this.books.splice(index, 1);
+      // this.books.splice(index, 1);
+
+      api.delete(`items/books/${id}`).then(response => {
+        this.getBooks();
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      })
     },
     
   }
