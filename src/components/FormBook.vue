@@ -1,45 +1,54 @@
 <template>
+      <q-scroll-area
+      :delay="1200"
+      style="height: 420px; max-width: 100%;"
+    >
      <q-chat-message
-        size="8"
         sent
-        text-color="white"
-        bg-color="light-green-6"
+        text-color="black"
+        bg-color="cyan-3"
         class="q-mt-md q-mr-lg"
       >
-      <div v-for="msg in selectedBook.notes" :key="msg" class="cursor-pointer">
-        <!-- <q-btn-dropdown
-      color="primay"
-    >
-      <q-list>
-        <q-item clickable v-close-popup @click="editar(msg)">
-          <q-item-section>
-            <q-item-label>Editar</q-item-label>
-          </q-item-section>
-        </q-item>
+        <div v-for="msg in selectedBook.notes" :key="msg" class="cursor-pointer">
+          <div class="row justify-end">
+            <q-btn-dropdown
+              color="cyan-10"
+              size="md"
+              flat
+              unelevated
+            >
+              <q-list>
+                <q-item clickable v-close-popup @click="editar(msg)" v-if="msg.type === 'text'">
+                  <q-item-section>
+                    <q-item-label>Editar</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-icon name="edit" color="cyan-8" />
+                  </q-item-section>
+                </q-item>
 
-        <q-item clickable v-close-popup>
-          <q-item-section>
-            <q-item-label>Videos</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-close-popup>
-          <q-item-section>
-            <q-item-label>Articles</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-btn-dropdown> -->
-    <div v-if="msg.type === 'text'" :innerHTML="msg.value"></div>
-     <q-img
-        v-if="msg.type === 'image'"
-          :src="msg.value"
-          height="140px"
-          width="140px"
-        />
-      </div>
+                <q-item clickable v-close-popup @click="borrar(msg)">
+                  <q-item-section>
+                    <q-item-label>Borrar</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-icon name="delete_outline" color="cyan-8" />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </div>
+          <div v-if="msg.type === 'text'" :innerHTML="msg.value"></div>
+          <q-img
+              v-if="msg.type === 'image'"
+                :src="msg.value"
+                height="140px"
+                width="140px"
+              />
+        </div>
      </q-chat-message>
-     <q-footer elevated class="bg-white text-light-green-10 q-pa-md">
+      </q-scroll-area>
+     <q-footer elevated class="bg-white text-cyan-10 q-pa-md">
         <div class="row q-gutter-lg">
           <div class="col-8">
             <q-editor
@@ -73,14 +82,14 @@
               />
             </template> -->
             </q-editor>
-            <q-btn color="light-green-6" label="Guardar nota" @click="enviar"/>
+            <q-btn color="cyan-9" class="q-mt-md" label="Guardar nota" @click="enviar"/>
           </div>
           <div class="col-3">
             <q-uploader
               :factory="factoryFn"
               label="Solo imagenes"
               class="full-width"
-              color="light-green-4"
+              color="cyan-10"
               multiple
               accept=".jpg, image/*"
               @uploaded="successUpload"
@@ -99,19 +108,17 @@ import useNotes from '../composables/useNotes'
     export default {
         setup() {
 
-          const { selectedBook, message, editor, openModal, enviar, editar, factoryFn, successUpload, saveWork, uploadIt } = useNotes()
+          const { selectedBook, message, editor, enviar, editar, borrar, factoryFn, successUpload } = useNotes()
             return {
                 selectedBook,
                 message,
                 editor,
 
-                openModal,
                 successUpload,
                 enviar,
+                borrar,
                 editar,
-                factoryFn,
-                saveWork,
-                uploadIt
+                factoryFn
             }
         }
     }

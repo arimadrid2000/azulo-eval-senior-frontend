@@ -43,7 +43,18 @@ const useBooks = () => {
   }
 
   const deleteBook = (id: number) => {
-    bookStore.deleteBook(id)
+    $q.dialog({
+      title: 'Confirmacion',
+      message: 'Esta seguro que desea eliminar esta libreta',
+      cancel: true,
+      persistent: true
+    }).onOk(() => {
+      bookStore.deleteBook(id)
+    }).onCancel(() => {
+      console.log('Operacion cancelada por el usuario')
+    }).onDismiss(() => {
+      console.log('Operacion cancelada por el usuario')
+    })
   }
 
   const getSettings = async() => {

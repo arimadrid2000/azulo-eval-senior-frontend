@@ -2,7 +2,7 @@
     <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders bg-grey-1">
       <q-header elevated class="bg-cyan-7">
         <q-toolbar>
-          <q-avatar @click="goBack">
+          <q-avatar @click="goBack" class="cursor-pointer">
             <img :src="logo">
           </q-avatar>
           <q-toolbar-title>{{ title }}</q-toolbar-title>

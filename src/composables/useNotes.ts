@@ -22,6 +22,10 @@ const useNotes = () => {
     const message = ref(bookStore.message)
 
     const editor = ref('')
+
+    const tempMsj = ref()
+
+    console.log(tempMsj)
     
     const selectedBook = computed(() => {
       bookStore.$patch((state) => {
@@ -33,32 +37,63 @@ const useNotes = () => {
 
     const enviar = () => {
       bookStore.$patch((state) => {
-        const lastIndex = state.selectedBook.notes.length
-        const id = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].id + 1 : 0
-        const position = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].position + 1 : 0
-        const newNote = {
-          id: id,
-          position: position,
-          value: editor.value,
-          type: 'text'
+        if (tempMsj.value) {
+          bookStore.$patch((state) => {
+            const index = state.selectedBook.notes.findIndex((note: any) => note.id === tempMsj.value.id);
+            if (index === -1) return
+            state.selectedBook.notes[index].value = editor.value;
+            api.patch(`items/books/${state.selectedBook.id}`, {notes: state.selectedBook.notes}).then(response => {
+              console.log(response)
+            }).catch(error => {
+              console.log(error)
+            })
+          })
+        } else {
+          const lastIndex = state.selectedBook.notes.length
+          const id = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].id + 1 : 0
+          const position = lastIndex > 0 ? state.selectedBook.notes[lastIndex - 1].position + 1 : 0
+          const newNote = {
+            id: id,
+            position: position,
+            value: editor.value,
+            type: 'text'
+          }
+          state.selectedBook.notes.push(newNote)
+          api.patch(`items/books/${state.selectedBook.id}`, {notes: state.selectedBook.notes}).then(response => {
+            console.log(response)
+          }).catch(error => {
+            console.log(error)
+          })
         }
-        state.selectedBook.notes.push(newNote)
+      })
+      editor.value = '';
+    }
+
+    const editar = (msg: any) => {
+      editor.value = msg.value
+      tempMsj.value = msg
+    }
+
+    const borrar = (msg: any) => {
+      bookStore.$patch((state) => {
+        const index = state.selectedBook.notes.findIndex((note: any) => note.id === msg.id);
+        if (msg.type === 'image') {
+          const id = msg.value.substring(msg.value.lastIndexOf("/") + 1)
+          console.log(id);
+          api.delete(`files/${id}`).then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+        if (index === -1) return
+        state.selectedBook.notes.splice(index, 1)
         api.patch(`items/books/${state.selectedBook.id}`, {notes: state.selectedBook.notes}).then(response => {
           console.log(response)
         }).catch(error => {
           console.log(error)
         })
       })
-    }
-
-    const editar = (msg: any) => {
-      editor.value = msg.value
-    }
-
-    console.log(selectedBook.value)
-
-    const openModal = (id: any) => {
-        console.log(id)
     }
 
 
@@ -104,22 +139,11 @@ const useNotes = () => {
         message,
         editor,
 
-        openModal,
         enviar,
         editar,
+        borrar,
         factoryFn,
-        successUpload,
-        saveWork () {
-          $q.notify({
-            message: 'Saved your text to local storage',
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done'
-          })
-        },
-        uploadIt () {
-          console.log('upload')
-        }
+        successUpload
     }
 }
 
